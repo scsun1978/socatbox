@@ -3,13 +3,14 @@
 #init env for readyding installation
 sudo rm -R /opt/tigertms/
 sudo rm /etc/profile.d/tigerproxy_cmd.sh
+sudo rm output*.txt
 sudo mkdir /opt/tigertms/
 
 socat=$(ps -ef | grep socat)
 echo $socat
-read -p "Press any key to kill all socat session " -n1 -s
+#read -p "Press any key to kill all socat session " -n1 -s
 sudo pkill -9 socat
-read -p "Press any key to confirm socat session" -n1 -s
+#read -p "Press any key to confirm socat session" -n1 -s
 socat=$(ps -ef | grep socat)
 echo $socat
 
@@ -111,20 +112,20 @@ if [[ -n "$ifcip" ]] && [[ -n "$pmslink" ]] && [[ -n "$proxyip" ]] && [[ -n "$pr
 		echo "nohup socat TCP4:$ifcip:$pmslink,forever,interval=15,reuseaddr,fork OPENSSL:$proxyip:$proxypmslink,cafile=dummycert.pem,verify=0 >> /opt/tigertms/socat5010.log 2>&1 &" >>$output2
 fi
 
-read -p "Press any key to wait reading configuration file... " -n1 -s
+#read -p "Press any key to wait reading configuration file... " -n1 -s
 echo -e "configuration file is ready in $output2"
-sudo cat $output2
-read -p "Press any key to confirm configuration... " -n1 -s
+sudo cat output_cmd.txt
+#read -p "Press any key to confirm configuration... " -n1 -s
 
 sudo cp output_cmd.txt /opt/tigertms/tigerproxy_cmd.sh
 sudo cp output_cmd.txt /etc/profile.d/tigerproxy_cmd.sh
 sudo cp tigerpmslink.service /opt/tigertms/tigerpmslink.service
 sudo chmod 777 /opt/tigertms/*.*
 sudo chmod 777 /etc/profile.d/tigerproxy_cmd.sh
-
-read -p "Press any key to run... " -n1 -s
 sudo bash /opt/tigertms/tigerproxy_cmd.sh
 
+read -p "Press any key to run... " -n1 -s
+sudo chmod 777 /opt/tigertms/*.*
 #read -p "Press any key to write boot service... " -n1 -s
 #sudo systemctl start /opt/tigertms/tigerpmslink.service
 #sudo systemctl enable /opt/tigertms/tigerpmslink.service
